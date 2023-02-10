@@ -18,3 +18,11 @@ model Patient {
   dob   String
   emr   String
 }
+
+model Provider {
+  id          Int    @id @default(autoincrement())
+  email       String @unique
+  name        String
+  phoneNumber String
+  shifts      String
+}
