@@ -1,6 +1,6 @@
 import { prisma } from "../db/index"
 import { Request, Response } from "express";
-
+ 
 
 export const addPatient = async (req:Request ,res:Response) => {
     const patient = req.body

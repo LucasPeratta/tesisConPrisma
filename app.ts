@@ -8,9 +8,6 @@ app.set("port",  3000);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// init(db);
-
-
 //routes
 app.use("/", routes)
 
