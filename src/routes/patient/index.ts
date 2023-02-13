@@ -1,16 +1,22 @@
-import express from "express"
- const router = express.Router()
+import express from "express";
+const router = express.Router();
 
- import { addPatient, getAll, getPatientById, updatePatient, deletePatient } from "../../controllers/patient";
+import {
+  addPatient,
+  getAll,
+  getPatientById,
+  updatePatient,
+  deletePatient,
+} from "../../controllers/patient";
 
- router.post("/", addPatient);
+router.post("/", addPatient);
 
- router.get("/:id", getPatientById);
- 
- router.get("/", getAll);
+router.get("/:id", getPatientById);
 
- router.put("/:id", updatePatient)
+router.get("/", getAll);
 
- router.delete("/:id", deletePatient)
+router.put("/:id", updatePatient);
+
+router.delete("/:id", deletePatient);
 
 export default router;

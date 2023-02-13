@@ -1,19 +1,22 @@
-import express from "express"
- const router = express.Router()
+import express from "express";
+const router = express.Router();
 
+import {
+  addProvider,
+  getAll,
+  getProviderById,
+  updateProvider,
+  deleteProvider,
+} from "../../controllers/providers";
 
- import { addProvider, getAll, getProviderById, updateProvider, deleteProvider } from "../../controllers/providers";
+router.post("/", addProvider);
 
- router.post("/", addProvider);
+router.get("/:id", getProviderById);
 
- router.get("/:id", getProviderById);
- 
- router.get("/", getAll);
+router.get("/", getAll);
 
- router.put("/:id", updateProvider);
+router.put("/:id", updateProvider);
 
- router.delete("/:id", deleteProvider)
+router.delete("/:id", deleteProvider);
 
-
- 
 export default router;
