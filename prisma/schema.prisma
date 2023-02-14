@@ -34,9 +34,9 @@ model Appointment {
   status     Status   @default(espera)
   date       DateTime
   time       String
-  patient    Patient  @relation(fields: [patientId], references: [id])
+  patient    Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
   patientId  Int
-  provider   Provider @relation(fields: [providerId], references: [id])
+  provider   Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
   providerId Int
 }
 
