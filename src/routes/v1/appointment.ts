@@ -2,12 +2,12 @@ import express from "express"
 const router = express.Router()
 
 import {
-  addAppointment,
-  getAll,
-  getAppointmentById,
-  updateAppointmentStatus,
-  deleteAppointment,
-  updateAppointment
+	addAppointment,
+	getAll,
+	getAppointmentById,
+	updateAppointmentStatus,
+	deleteAppointment,
+	updateAppointment
 } from "../../controllers/appointment"
 
 router.post("/", addAppointment)

@@ -2,11 +2,11 @@ import express from "express"
 const router = express.Router()
 
 import {
-  addProvider,
-  getAll,
-  getProviderById,
-  updateProvider,
-  deleteProvider
+	addProvider,
+	getAll,
+	getProviderById,
+	updateProvider,
+	deleteProvider
 } from "../../controllers/providers"
 
 router.post("/", addProvider)

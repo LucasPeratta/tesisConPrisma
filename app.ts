@@ -13,13 +13,13 @@ app.set("port", 3000)
 
 // CORS
 const corsOptions = {
-  origin: "*",
-  optionsSuccessStatus: 200,
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  preflightContinue: false,
-  credentials: true,
-  allowedHeaders:
-    "Content-Type, Authorization, Content-Length, X-Requested-With, Accept"
+	origin: "*",
+	optionsSuccessStatus: 200,
+	methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+	preflightContinue: false,
+	credentials: true,
+	allowedHeaders:
+		"Content-Type, Authorization, Content-Length, X-Requested-With, Accept"
 }
 app.use(cors(corsOptions))
 
@@ -31,5 +31,5 @@ app.use(express.urlencoded({ extended: true }))
 app.use("/", routes)
 
 app.listen(process.env.PORT || 3000, () => {
-  console.log(`Server started on http://localhost:${process.env.PORT || 3000}`)
+	console.log(`Server started on http://localhost:${process.env.PORT || 3000}`)
 })
