@@ -1,14 +1,7 @@
-import express from "express";
-const router = express.Router();
+import express from "express"
+import v1Routes from "./v1"
 
-// Import all routers here
-import patientRoutes from "./patient";
-import providerRoutes from "./provider";
-import appointmentRoutes from "./appointment";
+const router = express.Router()
+router.use("/api/v1", v1Routes)
 
-// Link all routers to the main router
-router.use("/patients", patientRoutes);
-router.use("/providers", providerRoutes);
-router.use("/appointment", appointmentRoutes);
-
-export default router;
+export default router

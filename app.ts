@@ -1,16 +1,35 @@
-import express from "express";
-import routes from "./src/routes/index";
-const app = express();
+import express from "express"
+import routes from "./src/routes/index"
+import * as dotenv from "dotenv"
+import cors from "cors"
+
+const app = express()
+
+// init dotenv
+dotenv.config()
 
 //PORT
-app.set("port", 3000);
+app.set("port", 3000)
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// CORS
+const corsOptions = {
+  origin: "*",
+  optionsSuccessStatus: 200,
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  preflightContinue: false,
+  credentials: true,
+  allowedHeaders:
+    "Content-Type, Authorization, Content-Length, X-Requested-With, Accept"
+}
+app.use(cors(corsOptions))
+
+//middlewares
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 //routes
-app.use("/", routes);
+app.use("/", routes)
 
-app.listen(3000, () => {
-  console.log("Server started on http://localhost:3000");
-});
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`Server started on http://localhost:${process.env.PORT || 3000}`)
+})
