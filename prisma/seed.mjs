@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { PrismaClient } from "@prisma/client"
 import bcrypt from "bcrypt"
 
@@ -12,7 +14,7 @@ async function cleanDB() {
 }
 
 async function seed() {
-	cleanDB()
+	await cleanDB()
 
 	const adminUser = await prisma.user.create({
 		data: {
@@ -27,7 +29,7 @@ async function seed() {
 		}
 	})
 
-	const providerUser = await prisma.user.create({
+	const { provider } = await prisma.user.create({
 		data: {
 			email: "provider@example.com",
 			password: await bcrypt.hash("password", 10),
@@ -51,10 +53,17 @@ async function seed() {
 					}
 				}
 			}
+		},
+		select: {
+			provider: {
+				select: {
+					id: true
+				}
+			}
 		}
 	})
 
-	const patientUser = await prisma.user.create({
+	const { patient } = await prisma.user.create({
 		data: {
 			email: "patient@example.com",
 			password: await bcrypt.hash("password", 10),
@@ -68,26 +77,29 @@ async function seed() {
 					emr: "Medical history for Patient User"
 				}
 			}
+		},
+		select: {
+			patient: {
+				select: {
+					id: true
+				}
+			}
 		}
 	})
 
-	// const appointment = await prisma.appointment.create({
-	// 	data: {
-	// 		status: "espera",
-	// 		date: new Date("2023-04-01T09:00:00Z"),
-	// 		time: "09:00",
-	// 		patient: {
-	// 			connect: {
-	// 				id: patientUser.patientId
-	// 			}
-	// 		},
-	// 		provider: {
-	// 			connect: {
-	// 				id: providerUser.providerId
-	// 			}
-	// 		}
-	// 	}
-	// })
+	const appointment = await prisma.appointment.create({
+		data: {
+			status: "espera",
+			date: new Date(),
+			time: "14:00",
+			patient: {
+				connect: { id: patient.id }
+			},
+			provider: {
+				connect: { id: provider.id }
+			}
+		}
+	})
 
 	console.log("Seeded data successfully")
 }

@@ -7,7 +7,7 @@ import {
 	getProviderById,
 	updateProvider,
 	deleteProvider
-} from "../../controllers/providers"
+} from "../../controllers/provider"
 
 router.post("/", addProvider)
 

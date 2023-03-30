@@ -1,25 +1,6 @@
 import { prisma } from "../config/db"
 import { Request, Response } from "express"
 
-export const addAppointment = async (req: Request, res: Response) => {
-	const appointment = req.body
-	try {
-		const data = await prisma.appointment.create({
-			data: {
-				patientId: appointment.patientId,
-				providerId: appointment.providerId,
-				date: new Date(),
-				time: appointment.time,
-				status: appointment.status
-			}
-		})
-		res.json({ msg: "Appointment added SUCCESSFULLY", data })
-	} catch (error) {
-		res.json({ msg: "Error, couldn't add a appointment ", error })
-		console.log(error)
-	}
-}
-
 export const getAll = async (req: Request, res: Response) => {
 	try {
 		const data = await prisma.appointment.findMany()
@@ -42,6 +23,33 @@ export const getAppointmentById = async (req: Request, res: Response) => {
 		res.json({ msg: "Appointment retrieved SUCCESSFULLY", data })
 	} catch (error) {
 		res.json({ msg: "Error, couldn't retrieve appointment", error })
+		console.log(error)
+	}
+}
+
+export const addAppointment = async (req: Request, res: Response) => {
+	const appointment = req.body
+	try {
+		const data = await prisma.appointment.create({
+			data: {
+				date: new Date(),
+				time: appointment.time,
+				status: appointment.status,
+				patient: {
+					connect: {
+						id: appointment.patientId
+					}
+				},
+				provider: {
+					connect: {
+						id: appointment.providerId
+					}
+				}
+			}
+		})
+		res.json({ msg: "Appointment added SUCCESSFULLY", data })
+	} catch (error) {
+		res.json({ msg: "Error, couldn't add a appointment ", error })
 		console.log(error)
 	}
 }
