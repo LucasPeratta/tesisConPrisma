@@ -7,9 +7,15 @@ export const addProvider = async (req: Request, res: Response) => {
 		const data = await prisma.provider.create({
 			data: {
 				name: provider.name,
-				email: provider.email,
 				phoneNumber: provider.phoneNumber,
-				shifts: provider.shifts
+				shifts: provider.shifts,
+				user: {
+					create: {
+						email: provider.email,
+						password: "password",
+						role: "patient"
+					}
+				}
 			}
 		})
 		res.json({ msg: "provider added SUCCESSFULLY", data: data.id })
@@ -55,7 +61,6 @@ export const updateProvider = async (req: Request, res: Response) => {
 			},
 			data: {
 				name: updatedProvider.name,
-				email: updatedProvider.email,
 				phoneNumber: updatedProvider.phoneNumber,
 				shifts: updatedProvider.shifts
 			}

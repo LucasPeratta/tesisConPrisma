@@ -55,10 +55,17 @@ export const addPatient = async (req: Request, res: Response) => {
 		const patientData = await prisma.patient.create({
 			data: {
 				name: patient.name,
-				email: patient.email,
 				dni: patient.dni,
 				emr: patient.emr,
-				dob: patient.dob
+				dob: patient.dob,
+				phoneNumber: patient.phoneNumber,
+				user: {
+					create: {
+						email: patient.email,
+						password: "password",
+						role: "patient"
+					}
+				}
 			}
 		})
 		res.json({ msg: "Patient added SUCCESSFULLY", data: patientData.id })
@@ -78,7 +85,6 @@ export const updatePatient = async (req: Request, res: Response) => {
 			},
 			data: {
 				name: updatedPatient.name,
-				email: updatedPatient.email,
 				dni: updatedPatient.dni,
 				emr: updatedPatient.emr,
 				dob: updatedPatient.dob

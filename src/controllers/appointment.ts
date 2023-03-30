@@ -96,7 +96,7 @@ export const deleteAppointment = async (req: Request, res: Response) => {
 				id: appointmentId
 			}
 		})
-		res.json({ msg: "Appointment deleted SUCCESSFULLY" })
+		res.json({ msg: "Appointment deleted SUCCESSFULLY", data: appointment.id })
 	} catch (error) {
 		res.json({ msg: "Error, couldn't delete appointment", error })
 		console.log(error)
