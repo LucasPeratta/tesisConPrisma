@@ -1,7 +1,7 @@
 import { prisma } from "../config/db"
 import { Request, Response } from "express"
 
-export const getAll = async (req: Request, res: Response) => {
+export const getAll = async (_req: Request, res: Response) => {
 	try {
 		const data = await prisma.patient.findMany()
 		res.json({ data })
