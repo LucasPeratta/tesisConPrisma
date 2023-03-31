@@ -7,14 +7,14 @@ import {
 	getPatientById,
 	updatePatient,
 	deletePatient,
-	getPatientByIdWithAppointment
+	getPatientByIdWithAppointments
 } from "../../controllers/patient"
 
 router.post("/", addPatient)
 
 router.get("/:id", getPatientById)
 
-router.get("/:id/appointments", getPatientByIdWithAppointment)
+router.get("/:id/appointments", getPatientByIdWithAppointments)
 
 router.get("/", getAll)
 
