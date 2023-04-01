@@ -14,7 +14,7 @@ export const getAll = async (_req: Request, res: Response) => {
 export const getPatientById = async (req: Request, res: Response) => {
 	const patientId = parseInt(req.params.id)
 	try {
-		const data = await prisma.patient.findUnique({
+		const data = await prisma.patient.findUniqueOrThrow({
 			where: {
 				id: patientId
 			}
@@ -33,7 +33,7 @@ export const getPatientByIdWithAppointments = async (
 ) => {
 	const patientId = parseInt(req.params.id)
 	try {
-		const data = await prisma.patient.findUnique({
+		const data = await prisma.patient.findUniqueOrThrow({
 			where: {
 				id: patientId
 			},

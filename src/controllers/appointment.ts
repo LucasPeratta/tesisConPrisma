@@ -14,7 +14,7 @@ export const getAll = async (req: Request, res: Response) => {
 export const getAppointmentById = async (req: Request, res: Response) => {
 	const appointmentId = parseInt(req.params.id)
 	try {
-		const data = await prisma.appointment.findUnique({
+		const data = await prisma.appointment.findUniqueOrThrow({
 			where: {
 				id: appointmentId
 			}

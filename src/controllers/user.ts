@@ -14,7 +14,7 @@ export const getAll = async (req: Request, res: Response) => {
 export const getUserById = async (req: Request, res: Response) => {
 	const userId = parseInt(req.params.id)
 	try {
-		const data = await prisma.user.findUnique({
+		const data = await prisma.user.findUniqueOrThrow({
 			where: {
 				id: userId
 			}
@@ -52,7 +52,7 @@ export const deleteUser = async (req: Request, res: Response) => {
 	const { id } = req.params
 
 	try {
-		const user = await prisma.user.findUnique({
+		const user = await prisma.user.findUniqueOrThrow({
 			where: {
 				id: parseInt(id)
 			},

@@ -38,7 +38,7 @@ export const getAll = async (req: Request, res: Response) => {
 export const getProviderById = async (req: Request, res: Response) => {
 	const providerId = parseInt(req.params.id)
 	try {
-		const data = await prisma.provider.findUnique({
+		const data = await prisma.provider.findUniqueOrThrow({
 			where: {
 				id: providerId
 			}

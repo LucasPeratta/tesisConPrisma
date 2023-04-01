@@ -14,7 +14,7 @@ export const getAll = async (req: Request, res: Response) => {
 export const getAdminById = async (req: Request, res: Response) => {
 	const adminId = parseInt(req.params.id)
 	try {
-		const data = await prisma.admin.findUnique({
+		const data = await prisma.admin.findUniqueOrThrow({
 			where: {
 				id: adminId
 			}
