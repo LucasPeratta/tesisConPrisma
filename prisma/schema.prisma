@@ -21,31 +21,28 @@ model User {
 }
 
 model Admin {
-  id     Int    @id @default(autoincrement())
-  name   String
-  user   User   @relation(fields: [userId], references: [id])
-  userId Int    @unique
+  id   Int    @id
+  name String
+  user User   @relation(fields: [id], references: [id]) // field admin id references user id 
 }
 
 model Patient {
-  id          Int           @id @default(autoincrement())
+  id          Int           @id
   name        String
   dni         String
   dob         String
   phoneNumber String?
   emr         String
+  user        User          @relation(fields: [id], references: [id]) // field patient id references user id
   Appointment Appointment[]
-  user        User          @relation(fields: [userId], references: [id])
-  userId      Int           @unique
 }
 
 model Provider {
-  id          Int           @id @default(autoincrement())
+  id          Int           @id
   name        String
   shifts      Json
   phoneNumber String?
-  user        User          @relation(fields: [userId], references: [id])
-  userId      Int           @unique
+  user        User          @relation(fields: [id], references: [id]) // field provider id references user id
   Appointment Appointment[]
 }
 
