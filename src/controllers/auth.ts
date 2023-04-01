@@ -1,14 +1,11 @@
-import { prisma } from "../config/db"
-import { Router, Request, Response } from "express"
+import { Request, Response } from "express"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
 import { getUserByEmail } from "../services/user"
 
-const router = Router()
-
 const JWT_SECRET = process.env.JWT_SECRET || "secret"
 
-router.post("/auth/login", async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response) => {
 	const { email, password } = req.body
 
 	const user = await getUserByEmail(email)
@@ -26,6 +23,4 @@ router.post("/auth/login", async (req: Request, res: Response) => {
 	const token = jwt.sign({ id: user.id }, JWT_SECRET)
 
 	res.send({ token })
-})
-
-export default router
+}
