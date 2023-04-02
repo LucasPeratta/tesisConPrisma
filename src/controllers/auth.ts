@@ -42,7 +42,13 @@ export const login = async (req: Request, res: Response) => {
 		subject: user.id.toString()
 	})
 
-	res.send({ token })
+	const userToReturn = {
+		id: user.id,
+		email: user.email,
+		role: user.role
+	}
+
+	res.send({ token, user: userToReturn })
 }
 
 export const register = async (req: Request, res: Response) => {
