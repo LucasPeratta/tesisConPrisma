@@ -1,14 +1,16 @@
+import { Patient, Prisma, Provider, Role, User } from "@prisma/client"
 import { Request, Response } from "express"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
 import { getUserByEmail } from "../repos/user"
 import { addPatient } from "../repos/patient"
-import { Patient, Role, User } from "@prisma/client"
+import { addProvider } from "../repos/provider"
 
 const JWT_SECRET = process.env.JWT_SECRET || "secret"
 const JWT_EXPIRATION = process.env.JWT_EXPIRATION || "3h"
 
 type TPatientUser = Omit<User & Patient, "id">
+type TProviderUser = Omit<User & Provider, "id">
 
 export const login = async (req: Request, res: Response) => {
 	const { email, password } = req.body
@@ -44,12 +46,6 @@ export const login = async (req: Request, res: Response) => {
 }
 
 export const register = async (req: Request, res: Response) => {
-	// check where the request is coming from (admin or patient or provider)
-	// if admin, create a user with the role of admin
-	// if patient, create a user with the role of patient
-	// if provider, create a user with the role of provider
-	// if none of the above, return an error
-
 	try {
 		const { email, role } = req.body
 
@@ -59,7 +55,7 @@ export const register = async (req: Request, res: Response) => {
 			return res.status(400).send({ error: "User already exists" })
 		}
 
-		let data
+		let id
 
 		if (role === "admin") {
 			console.log("Cannot create admin user this way")
@@ -68,16 +64,20 @@ export const register = async (req: Request, res: Response) => {
 				.send({ errorMsg: "Cannot create admin user using this route" })
 		}
 		if (role === "patient") {
-			data = createPatientUser(req.body as TPatientUser)
+			console.log("Creating patient user")
+			id = await createPatientUser(req.body as TPatientUser)
 		}
 
 		if (role === "provider") {
 			console.log("Creating provider user")
+			id = await createProviderUser(req.body as TProviderUser)
 		}
 
-		res.status(201).send({ data, message: "User created successfully" })
+		res.status(201).send({ data: { id }, message: "User created successfully" })
 	} catch (error) {
-		console.log(error)
+		if (error instanceof Error && error.message.includes("prisma")) {
+			return res.status(400).send({ errorMsg: "Invalid payload" })
+		}
 		res.status(400).send({ errorMsg: "Something went wrong", error })
 	}
 }
@@ -88,7 +88,7 @@ const createPatientUser = async (data: TPatientUser) => {
 	const newUser = {
 		email: data.email,
 		password: hashedPassword,
-		role: data.role as Role,
+		role: "patient" as Role,
 		name: data.name,
 		dni: data.dni,
 		dob: data.dob,
@@ -96,5 +96,22 @@ const createPatientUser = async (data: TPatientUser) => {
 		emr: ""
 	}
 
-	await addPatient(newUser)
+	const user = await addPatient(newUser)
+	return user.id
+}
+
+const createProviderUser = async (data: TProviderUser) => {
+	const hashedPassword = await bcrypt.hash(data.password, 10)
+
+	const newUser: TProviderUser = {
+		email: data.email,
+		password: hashedPassword,
+		role: "provider" as Role,
+		name: data.name,
+		shifts: data.shifts,
+		phoneNumber: data.phoneNumber
+	}
+
+	const user = await addProvider(newUser)
+	return user.id
 }
