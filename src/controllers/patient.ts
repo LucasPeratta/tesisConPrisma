@@ -1,9 +1,9 @@
-import { prisma } from "../config/db"
 import { Request, Response } from "express"
+import * as repo from "../repos/patient"
 
 export const getAll = async (_req: Request, res: Response) => {
 	try {
-		const data = await prisma.patient.findMany()
+		const data = await repo.getAllPatients()
 		res.json({ data })
 	} catch (error) {
 		res.json({ msg: "Error, couldn't retrieve patients", error })
@@ -14,11 +14,7 @@ export const getAll = async (_req: Request, res: Response) => {
 export const getPatientById = async (req: Request, res: Response) => {
 	const patientId = parseInt(req.params.id)
 	try {
-		const data = await prisma.patient.findUniqueOrThrow({
-			where: {
-				id: patientId
-			}
-		})
+		const data = await repo.getPatientById(patientId)
 
 		res.json({ msg: "Patient retrieved SUCCESSFULLY", data })
 	} catch (error) {
@@ -33,14 +29,7 @@ export const getPatientByIdWithAppointments = async (
 ) => {
 	const patientId = parseInt(req.params.id)
 	try {
-		const data = await prisma.patient.findUniqueOrThrow({
-			where: {
-				id: patientId
-			},
-			include: {
-				Appointment: true
-			}
-		})
+		const data = await repo.getPatientByIdWithAppointments(patientId)
 
 		res.json({ msg: "Patient retrieved SUCCESSFULLY", data })
 	} catch (error) {
@@ -52,22 +41,7 @@ export const getPatientByIdWithAppointments = async (
 export const addPatient = async (req: Request, res: Response) => {
 	const patient = req.body
 	try {
-		const patientData = await prisma.patient.create({
-			data: {
-				name: patient.name,
-				dni: patient.dni,
-				emr: patient.emr,
-				dob: patient.dob,
-				phoneNumber: patient.phoneNumber,
-				user: {
-					create: {
-						email: patient.email,
-						password: "password",
-						role: "patient"
-					}
-				}
-			}
-		})
+		const patientData = await repo.addPatient(patient)
 		res.json({ msg: "Patient added SUCCESSFULLY", data: patientData.id })
 	} catch (error) {
 		res.json({ msg: "Error, couldn't add a patient ", error })
@@ -79,17 +53,7 @@ export const updatePatient = async (req: Request, res: Response) => {
 	const patientId = parseInt(req.params.id)
 	const updatedPatient = req.body
 	try {
-		const data = await prisma.patient.update({
-			where: {
-				id: patientId
-			},
-			data: {
-				name: updatedPatient.name,
-				dni: updatedPatient.dni,
-				emr: updatedPatient.emr,
-				dob: updatedPatient.dob
-			}
-		})
+		const data = await repo.updatePatient(patientId, updatedPatient)
 		res.json({ msg: "Patient updated SUCCESSFULLY", data })
 	} catch (error) {
 		res.json({ msg: "Error, couldn't update patient", error })
@@ -100,11 +64,7 @@ export const updatePatient = async (req: Request, res: Response) => {
 export const deletePatient = async (req: Request, res: Response) => {
 	const patientId = parseInt(req.params.id)
 	try {
-		const patient = await prisma.patient.delete({
-			where: {
-				id: patientId
-			}
-		})
+		const patient = await repo.deletePatient(patientId)
 		res.json({ msg: "Patient deleted SUCCESSFULLY", data: patient.id })
 	} catch (error) {
 		res.json({ msg: "Error, couldn't delete patient", error })

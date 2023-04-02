@@ -1,7 +1,7 @@
 import { User } from "@prisma/client"
 import { Request, Response, NextFunction } from "express"
 import jwt from "jsonwebtoken"
-import { getUserById } from "../services/user"
+import { getUserById } from "../repos/user"
 
 const JWT_SECRET = process.env.JWT_SECRET || "secret"
 
