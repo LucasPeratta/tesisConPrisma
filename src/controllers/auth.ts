@@ -1,4 +1,4 @@
-import { Patient, Prisma, Provider, Role, User } from "@prisma/client"
+import { Patient, Provider, Role, User } from "@prisma/client"
 import { Request, Response } from "express"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
@@ -52,6 +52,7 @@ export const register = async (req: Request, res: Response) => {
 		const user = await getUserByEmail(email)
 
 		if (user) {
+			console.error("User already exists", email)
 			return res.status(400).send({ error: "User already exists" })
 		}
 
@@ -63,6 +64,7 @@ export const register = async (req: Request, res: Response) => {
 				.status(400)
 				.send({ errorMsg: "Cannot create admin user using this route" })
 		}
+
 		if (role === "patient") {
 			console.log("Creating patient user")
 			id = await createPatientUser(req.body as TPatientUser)
@@ -75,10 +77,13 @@ export const register = async (req: Request, res: Response) => {
 
 		res.status(201).send({ data: { id }, message: "User created successfully" })
 	} catch (error) {
+		console.log(error)
 		if (error instanceof Error && error.message.includes("prisma")) {
-			return res.status(400).send({ errorMsg: "Invalid payload" })
+			res.statusMessage = "Invalid payload"
+			return res.status(400).end()
 		}
-		res.status(400).send({ errorMsg: "Something went wrong", error })
+		res.statusMessage = "Something went wrong"
+		res.status(400).end()
 	}
 }
 

@@ -38,7 +38,7 @@ export const addPatient = async (patient: Omit<User & Patient, "id">) => {
 			user: {
 				create: {
 					email: patient.email,
-					password: "password",
+					password: patient.password,
 					role: "patient"
 				}
 			}
