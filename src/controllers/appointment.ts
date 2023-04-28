@@ -27,6 +27,42 @@ export const getAppointmentById = async (req: Request, res: Response) => {
 	}
 }
 
+export const getAppointmentsByPatientId = async (
+	req: Request,
+	res: Response
+) => {
+	const userId = parseInt(req.params.id)
+	try {
+		const data = await prisma.appointment.findMany({
+			where: {
+				patientId: userId
+			}
+		})
+		res.json({ msg: "Appointment retrieved SUCCESSFULLY", data })
+	} catch (error) {
+		res.json({ msg: "Error, couldn't retrieve appointment", error })
+		console.log(error)
+	}
+}
+
+export const getAppointmentsByProviderId = async (
+	req: Request,
+	res: Response
+) => {
+	const userId = parseInt(req.params.id)
+	try {
+		const data = await prisma.appointment.findMany({
+			where: {
+				providerId: userId
+			}
+		})
+		res.json({ msg: "Appointment retrieved SUCCESSFULLY", data })
+	} catch (error) {
+		res.json({ msg: "Error, couldn't retrieve appointment", error })
+		console.log(error)
+	}
+}
+
 export const addAppointment = async (req: Request, res: Response) => {
 	const appointment = req.body
 	try {

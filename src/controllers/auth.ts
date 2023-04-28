@@ -18,7 +18,7 @@ export const login = async (req: Request, res: Response) => {
 	const user = await getUserByEmail(email)
 
 	if (!user) {
-		return res.status(400).send({ error: "Invalid login credentials" })
+		return res.status(401).send({ error: "Invalid login credentials" })
 	}
 
 	const passwordMatch = await bcrypt.compare(password, user.password)

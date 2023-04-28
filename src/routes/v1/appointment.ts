@@ -5,6 +5,8 @@ import {
 	addAppointment,
 	getAll,
 	getAppointmentById,
+	getAppointmentsByPatientId,
+	getAppointmentsByProviderId,
 	updateAppointmentStatus,
 	deleteAppointment,
 	updateAppointment
@@ -13,6 +15,10 @@ import {
 router.post("/", addAppointment)
 
 router.get("/:id", getAppointmentById)
+
+router.get("/patient/:id", getAppointmentsByPatientId)
+
+router.get("/provider/:id", getAppointmentsByProviderId)
 
 router.get("/", getAll)
 

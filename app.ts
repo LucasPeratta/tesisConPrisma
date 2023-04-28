@@ -2,6 +2,7 @@ import express from "express"
 import routes from "./src/routes/index"
 import * as dotenv from "dotenv"
 import cors from "cors"
+import morgan from "morgan"
 
 const app = express()
 
@@ -26,6 +27,7 @@ app.use(cors(corsOptions))
 //middlewares
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(morgan("combined"))
 
 //routes
 app.use("/", routes)
