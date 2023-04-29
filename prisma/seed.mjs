@@ -87,11 +87,37 @@ async function seed() {
 		}
 	})
 
-	const appointment = await prisma.appointment.create({
+	await prisma.appointment.create({
 		data: {
 			status: "espera",
 			date: new Date(),
 			time: "14:00",
+			patient: {
+				connect: { id: patient.id }
+			},
+			provider: {
+				connect: { id: provider.id }
+			}
+		}
+	})
+	await prisma.appointment.create({
+		data: {
+			status: "espera",
+			date: new Date(),
+			time: "15:00",
+			patient: {
+				connect: { id: patient.id }
+			},
+			provider: {
+				connect: { id: provider.id }
+			}
+		}
+	})
+	await prisma.appointment.create({
+		data: {
+			status: "espera",
+			date: new Date(),
+			time: "16:00",
 			patient: {
 				connect: { id: patient.id }
 			},

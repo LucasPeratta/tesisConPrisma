@@ -14,6 +14,11 @@ type TProviderUser = Omit<User & Provider, "id">
 
 export const login = async (req: Request, res: Response) => {
 	const { email, password } = req.body
+	console.log("login", email, password)
+
+	if (!email || !password) {
+		return res.status(400).send({ error: "Missing email or password" })
+	}
 
 	const user = await getUserByEmail(email)
 
@@ -48,7 +53,7 @@ export const login = async (req: Request, res: Response) => {
 		role: user.role
 	}
 
-	res.send({ token, user: userToReturn })
+	res.send({ data: { token, user: userToReturn } })
 }
 
 export const register = async (req: Request, res: Response) => {

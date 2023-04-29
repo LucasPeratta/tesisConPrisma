@@ -36,6 +36,10 @@ export const getAppointmentsByPatientId = async (
 		const data = await prisma.appointment.findMany({
 			where: {
 				patientId: userId
+			},
+			include: {
+				provider: true,
+				patient: true
 			}
 		})
 		res.json({ msg: "Appointment retrieved SUCCESSFULLY", data })
