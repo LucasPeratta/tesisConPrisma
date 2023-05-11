@@ -52,6 +52,7 @@ export const getPatientByIdWithAppointments = async (id: number) => {
 }
 
 export const addPatient = async (patient: Omit<User & Patient, "id">) => {
+	const randomPassword = Math.random().toString(36).slice(-8)
 	const patientData = await prisma.patient.create({
 		data: {
 			name: patient.name,
@@ -62,29 +63,7 @@ export const addPatient = async (patient: Omit<User & Patient, "id">) => {
 			user: {
 				create: {
 					email: patient.email,
-					password: await bcrypt.hash(patient.password, 10),
-					role: "patient"
-				}
-			}
-		}
-	})
-	return patientData
-}
-
-export const addPatientAsAProvider = async (
-	patient: Omit<User & Patient, "id">
-) => {
-	const patientData = await prisma.patient.create({
-		data: {
-			name: patient.name,
-			dni: patient.dni,
-			emr: patient.emr,
-			dob: patient.dob,
-			phoneNumber: patient.phoneNumber,
-			user: {
-				create: {
-					email: patient.email,
-					password: await bcrypt.hash(Math.random().toString(36).slice(-8), 10),
+					password: await bcrypt.hash(patient.password || randomPassword, 10),
 					role: "patient"
 				}
 			}

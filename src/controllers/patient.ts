@@ -1,8 +1,5 @@
 import { Request, Response } from "express"
 import * as repo from "../repos/patient"
-import { Patient, User } from "@prisma/client"
-
-type AuthRequest = Request & { user?: User }
 
 export const getAll = async (_req: Request, res: Response) => {
 	try {
@@ -41,17 +38,11 @@ export const getPatientByIdWithAppointments = async (
 	}
 }
 
-export const addPatient = async (req: AuthRequest, res: Response) => {
+export const addPatient = async (req: Request, res: Response) => {
 	const patient = req.body
 
-	const user = req.user
 	try {
-		let patientData: Patient
-		if (user && (user.role === "provider" || user.role === "admin")) {
-			patientData = await repo.addPatientAsAProvider(patient)
-		} else {
-			patientData = await repo.addPatient(patient)
-		}
+		const patientData = await repo.addPatient(patient)
 
 		res.json({ msg: "Patient added SUCCESSFULLY", data: patientData.id })
 	} catch (error) {
