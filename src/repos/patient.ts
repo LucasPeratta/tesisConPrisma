@@ -2,8 +2,19 @@ import { Patient, User } from "@prisma/client"
 import { prisma } from "../config/db"
 
 export const getAllPatients = async () => {
-	const data = await prisma.patient.findMany()
-	return data
+	const data = await prisma.patient.findMany({
+		include: {
+			user: {
+				select: {
+					email: true
+				}
+			}
+		}
+	})
+	return data.map((patient) => ({
+		...patient,
+		email: patient.user.email
+	}))
 }
 
 export const getPatientById = async (id: number) => {

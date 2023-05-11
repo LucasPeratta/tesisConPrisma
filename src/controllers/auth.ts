@@ -13,8 +13,7 @@ type TPatientUser = Omit<User & Patient, "id">
 type TProviderUser = Omit<User & Provider, "id">
 
 export const login = async (req: Request, res: Response) => {
-	const { email, password } = req.body
-	console.log("login", email, password)
+	const { email, password, role } = req.body
 
 	if (!email || !password) {
 		return res.status(400).send({ error: "Missing email or password" })
@@ -22,7 +21,10 @@ export const login = async (req: Request, res: Response) => {
 
 	const user = await getUserByEmail(email)
 
-	if (!user) {
+	console.log(user?.role)
+	console.log(role)
+
+	if (!user || user.role !== role) {
 		return res.status(401).send({ error: "Invalid login credentials" })
 	}
 
