@@ -61,6 +61,19 @@ export const updatePatient = async (req: Request, res: Response) => {
 	}
 }
 
+export const updateEmr = async (req: Request, res: Response) => {
+	const patientId = parseInt(req.params.id)
+	const { emr } = req.body
+
+	try {
+		const data = await repo.updateEmr(patientId, emr)
+		res.json({ msg: "Patient EMR updated SUCCESSFULLY", data })
+	} catch (error) {
+		res.json({ msg: "Error, couldn't update patient EMR", error })
+		console.log(error)
+	}
+}
+
 export const deletePatient = async (req: Request, res: Response) => {
 	const patientId = parseInt(req.params.id)
 	try {

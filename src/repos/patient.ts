@@ -18,24 +18,36 @@ export const getAllPatients = async () => {
 }
 
 export const getPatientById = async (id: number) => {
-	const patients = await prisma.patient.findUniqueOrThrow({
-		where: {
-			id
-		}
-	})
-	return patients
-}
-
-export const getPatientByIdWithAppointments = async (id: number) => {
-	const patients = await prisma.patient.findUniqueOrThrow({
+	const patient = await prisma.patient.findUniqueOrThrow({
 		where: {
 			id
 		},
 		include: {
-			Appointment: true
+			user: {
+				select: {
+					email: true
+				}
+			}
 		}
 	})
-	return patients
+	return { ...patient, email: patient.user.email }
+}
+
+export const getPatientByIdWithAppointments = async (id: number) => {
+	const patient = await prisma.patient.findUniqueOrThrow({
+		where: {
+			id
+		},
+		include: {
+			Appointment: true,
+			user: {
+				select: {
+					email: true
+				}
+			}
+		}
+	})
+	return { ...patient, email: patient.user.email }
 }
 
 export const addPatient = async (patient: Omit<User & Patient, "id">) => {
@@ -69,6 +81,18 @@ export const updatePatient = async (id: number, patient: Patient) => {
 			emr: patient.emr,
 			dob: patient.dob,
 			phoneNumber: patient.phoneNumber
+		}
+	})
+	return data
+}
+
+export const updateEmr = async (id: number, emr: string) => {
+	const data = await prisma.patient.update({
+		where: {
+			id
+		},
+		data: {
+			emr
 		}
 	})
 	return data

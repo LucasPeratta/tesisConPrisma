@@ -6,6 +6,7 @@ import {
 	getAll,
 	getPatientById,
 	updatePatient,
+	updateEmr,
 	deletePatient,
 	getPatientByIdWithAppointments
 } from "../../controllers/patient"
@@ -19,6 +20,8 @@ router.get("/:id/appointments", getPatientByIdWithAppointments)
 router.get("/", getAll)
 
 router.put("/:id", updatePatient)
+
+router.patch("/:id/emr", updateEmr)
 
 router.delete("/:id", deletePatient)
 
