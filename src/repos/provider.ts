@@ -1,4 +1,5 @@
 import { Provider, User } from "@prisma/client"
+import bcrypt from "bcrypt"
 import { prisma } from "../config/db"
 
 export const getAll = async () => {
@@ -24,7 +25,7 @@ export const addProvider = async (provider: Omit<User & Provider, "id">) => {
 			user: {
 				create: {
 					email: provider.email,
-					password: provider.password,
+					password: await bcrypt.hash(provider.password, 10),
 					role: "provider"
 				}
 			}

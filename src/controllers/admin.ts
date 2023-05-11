@@ -1,5 +1,6 @@
 import { prisma } from "../config/db"
 import { Request, Response } from "express"
+import bcrypt from "bcrypt"
 
 export const getAll = async (req: Request, res: Response) => {
 	try {
@@ -29,6 +30,9 @@ export const getAdminById = async (req: Request, res: Response) => {
 
 export const addAdmin = async (req: Request, res: Response) => {
 	const admin = req.body
+
+	const randomPassword = Math.random().toString(36).slice(-8)
+
 	try {
 		const newAdmin = await prisma.admin.create({
 			data: {
@@ -36,7 +40,7 @@ export const addAdmin = async (req: Request, res: Response) => {
 				user: {
 					create: {
 						email: admin.email,
-						password: "password",
+						password: await bcrypt.hash(admin.password || randomPassword, 10),
 						role: "admin"
 					}
 				}

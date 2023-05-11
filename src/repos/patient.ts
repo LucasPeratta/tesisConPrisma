@@ -1,5 +1,6 @@
 import { Patient, User } from "@prisma/client"
 import { prisma } from "../config/db"
+import bcrypt from "bcrypt"
 
 export const getAllPatients = async () => {
 	const data = await prisma.patient.findMany({
@@ -61,7 +62,29 @@ export const addPatient = async (patient: Omit<User & Patient, "id">) => {
 			user: {
 				create: {
 					email: patient.email,
-					password: patient.password,
+					password: await bcrypt.hash(patient.password, 10),
+					role: "patient"
+				}
+			}
+		}
+	})
+	return patientData
+}
+
+export const addPatientAsAProvider = async (
+	patient: Omit<User & Patient, "id">
+) => {
+	const patientData = await prisma.patient.create({
+		data: {
+			name: patient.name,
+			dni: patient.dni,
+			emr: patient.emr,
+			dob: patient.dob,
+			phoneNumber: patient.phoneNumber,
+			user: {
+				create: {
+					email: patient.email,
+					password: await bcrypt.hash(Math.random().toString(36).slice(-8), 10),
 					role: "patient"
 				}
 			}
