@@ -40,7 +40,9 @@ export const getPatientByIdWithAppointments = async (id: number) => {
 			id
 		},
 		include: {
-			Appointment: true,
+			Appointment: {
+				include: { provider: true }
+			},
 			user: {
 				select: {
 					email: true

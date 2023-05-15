@@ -1,9 +1,15 @@
 import { prisma } from "../config/db"
 import { Request, Response } from "express"
+import {
+	getAllAppointments,
+	getById,
+	getByPatientId,
+	getByProviderId
+} from "../repos/appointment"
 
 export const getAll = async (req: Request, res: Response) => {
 	try {
-		const data = await prisma.appointment.findMany()
+		const data = await getAllAppointments()
 		res.json({ data })
 	} catch (error) {
 		res.json({ msg: "Error, couldn't retrieve appointments", error })
@@ -14,12 +20,7 @@ export const getAll = async (req: Request, res: Response) => {
 export const getAppointmentById = async (req: Request, res: Response) => {
 	const appointmentId = parseInt(req.params.id)
 	try {
-		const data = await prisma.appointment.findUniqueOrThrow({
-			where: {
-				id: appointmentId
-			}
-		})
-
+		const data = await getById(appointmentId)
 		res.json({ msg: "Appointment retrieved SUCCESSFULLY", data })
 	} catch (error) {
 		res.json({ msg: "Error, couldn't retrieve appointment", error })
@@ -31,17 +32,9 @@ export const getAppointmentsByPatientId = async (
 	req: Request,
 	res: Response
 ) => {
-	const userId = parseInt(req.params.id)
+	const patientId = parseInt(req.params.id)
 	try {
-		const data = await prisma.appointment.findMany({
-			where: {
-				patientId: userId
-			},
-			include: {
-				provider: true,
-				patient: true
-			}
-		})
+		const data = await getByPatientId(patientId)
 		res.json({ msg: "Appointment retrieved SUCCESSFULLY", data })
 	} catch (error) {
 		res.json({ msg: "Error, couldn't retrieve appointment", error })
@@ -53,13 +46,9 @@ export const getAppointmentsByProviderId = async (
 	req: Request,
 	res: Response
 ) => {
-	const userId = parseInt(req.params.id)
+	const providerId = parseInt(req.params.id)
 	try {
-		const data = await prisma.appointment.findMany({
-			where: {
-				providerId: userId
-			}
-		})
+		const data = await getByProviderId(providerId)
 		res.json({ msg: "Appointment retrieved SUCCESSFULLY", data })
 	} catch (error) {
 		res.json({ msg: "Error, couldn't retrieve appointment", error })
