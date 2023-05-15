@@ -11,9 +11,16 @@ export const getProviderById = async (id: number) => {
 	const data = await prisma.provider.findUniqueOrThrow({
 		where: {
 			id
+		},
+		include: {
+			user: {
+				select: {
+					email: true
+				}
+			}
 		}
 	})
-	return data
+	return { ...data, email: data.user.email, user: null }
 }
 
 export const addProvider = async (provider: Omit<User & Provider, "id">) => {

@@ -29,6 +29,46 @@ async function seed() {
 		}
 	})
 
+	const shifts = {
+		monday: {
+			available: true,
+			shifts: [
+				{ from: 9, to: 13 },
+				{ from: 14, to: 18 }
+			]
+		},
+		tuesday: {
+			available: true,
+			shifts: [{ from: 12, to: 16 }]
+		},
+		wednesday: {
+			available: false,
+			shifts: []
+		},
+		thursday: {
+			available: true,
+			shifts: [
+				{ from: 10, to: 14 },
+				{ from: 15, to: 19 }
+			]
+		},
+		friday: {
+			available: true,
+			shifts: [
+				{ from: 8, to: 12 },
+				{ from: 13, to: 17 }
+			]
+		},
+		saturday: {
+			available: false,
+			shifts: []
+		},
+		sunday: {
+			available: false,
+			shifts: []
+		}
+	}
+
 	const { provider } = await prisma.user.create({
 		data: {
 			email: "provider@example.com",
@@ -37,20 +77,7 @@ async function seed() {
 			provider: {
 				create: {
 					name: "Provider User",
-					shifts: {
-						create: [
-							{
-								day: "monday",
-								startTime: "09:00",
-								endTime: "17:00"
-							},
-							{
-								day: "wednesday",
-								startTime: "13:00",
-								endTime: "20:00"
-							}
-						]
-					}
+					shifts
 				}
 			}
 		},
