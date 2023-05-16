@@ -61,7 +61,7 @@ export const addAppointment = async (req: Request, res: Response) => {
 	try {
 		const data = await prisma.appointment.create({
 			data: {
-				date: new Date(),
+				date: appointment.date,
 				time: appointment.time,
 				status: appointment.status,
 				patient: {
