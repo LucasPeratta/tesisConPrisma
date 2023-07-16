@@ -49,8 +49,9 @@ model Provider {
 model Appointment {
   id         Int      @id @default(autoincrement())
   status     Status   @default(espera)
-  date       DateTime
+  date       String
   time       String
+  duration   Int      @default(30)
   patient    Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
   patientId  Int
   provider   Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)

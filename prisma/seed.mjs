@@ -16,9 +16,9 @@ async function cleanDB() {
 async function seed() {
 	await cleanDB()
 
-	const adminUser = await prisma.user.create({
+	await prisma.user.create({
 		data: {
-			email: "admin@example.com",
+			email: "admin@mail.com",
 			password: await bcrypt.hash("password", 10),
 			role: "admin",
 			admin: {
@@ -69,14 +69,14 @@ async function seed() {
 		}
 	}
 
-	const { provider } = await prisma.user.create({
+	const { provider: cami } = await prisma.user.create({
 		data: {
-			email: "provider@example.com",
+			email: "cami@mail.com",
 			password: await bcrypt.hash("password", 10),
 			role: "provider",
 			provider: {
 				create: {
-					name: "Provider User",
+					name: "Camila Aguirre",
 					shifts
 				}
 			}
@@ -90,18 +90,82 @@ async function seed() {
 		}
 	})
 
-	const { patient } = await prisma.user.create({
+	const { provider: marcos } = await prisma.user.create({
 		data: {
-			email: "patient@example.com",
+			email: "marcos@mail.com",
+			password: await bcrypt.hash("password", 10),
+			role: "provider",
+			provider: {
+				create: {
+					name: "Marcos Zani",
+					shifts
+				}
+			}
+		},
+		select: {
+			provider: {
+				select: {
+					id: true
+				}
+			}
+		}
+	})
+
+	const { patient: franco } = await prisma.user.create({
+		data: {
+			email: "franco@mail.com",
 			password: await bcrypt.hash("password", 10),
 			role: "patient",
 			patient: {
 				create: {
-					name: "Patient User",
-					dni: "12345678A",
-					dob: "1990-01-01",
+					name: "Franco Peratta",
+					dni: "38919769",
+					dob: "1995-06-20",
+					phoneNumber: "2914628934",
+					emr: ""
+				}
+			}
+		},
+		select: {
+			patient: {
+				select: {
+					id: true
+				}
+			}
+		}
+	})
+
+	for (let i = 0; i < 10; i++) {
+		await prisma.user.create({
+			data: {
+				email: "user" + i + "@mail.com",
+				password: await bcrypt.hash("password", 10),
+				role: "patient",
+				patient: {
+					create: {
+						name: "Paciente de Prueba " + i,
+						dni: "DNI: " + i,
+						dob: "1995-06-20",
+						phoneNumber: "2914628934",
+						emr: ""
+					}
+				}
+			}
+		})
+	}
+
+	const { patient: lucas } = await prisma.user.create({
+		data: {
+			email: "lucas@mail.com",
+			password: await bcrypt.hash("password", 10),
+			role: "patient",
+			patient: {
+				create: {
+					name: "Lucas Peratta",
+					dni: "42123456",
+					dob: "2022-01-09",
 					phoneNumber: "123456789",
-					emr: "Medical history for Patient User"
+					emr: ""
 				}
 			}
 		},
@@ -117,47 +181,49 @@ async function seed() {
 	await prisma.appointment.create({
 		data: {
 			status: "espera",
-			date: new Date(),
+			date: new Date().toISOString().split("T")[0],
 			time: "14:00",
+			duration: 30,
 			patient: {
-				connect: { id: patient.id }
+				connect: { id: franco.id }
 			},
 			provider: {
-				connect: { id: provider.id }
+				connect: { id: cami.id }
 			}
 		}
 	})
 	await prisma.appointment.create({
 		data: {
 			status: "espera",
-			date: new Date(),
+			date: new Date().toISOString().split("T")[0],
 			time: "15:00",
+			duration: 30,
 			patient: {
-				connect: { id: patient.id }
+				connect: { id: franco.id }
 			},
 			provider: {
-				connect: { id: provider.id }
+				connect: { id: marcos.id }
 			}
 		}
 	})
 	await prisma.appointment.create({
 		data: {
 			status: "espera",
-			date: new Date(),
+			date: new Date().toISOString().split("T")[0],
 			time: "16:00",
+			duration: 30,
 			patient: {
-				connect: { id: patient.id }
+				connect: { id: lucas.id }
 			},
 			provider: {
-				connect: { id: provider.id }
+				connect: { id: cami.id }
 			}
 		}
 	})
-
-	console.log("Seeded data successfully")
 }
 
 seed()
+	.then(() => console.log("Database seeded!"))
 	.catch((e) => console.error(e))
 	.finally(async () => {
 		await prisma.$disconnect()

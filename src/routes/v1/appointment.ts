@@ -9,7 +9,8 @@ import {
 	getAppointmentsByProviderId,
 	updateAppointmentStatus,
 	deleteAppointment,
-	updateAppointment
+	updateAppointment,
+	getOccupiedSlots
 } from "../../controllers/appointment"
 
 router.post("/", addAppointment)
@@ -27,5 +28,7 @@ router.put("/:id", updateAppointment)
 router.patch("/:id", updateAppointmentStatus)
 
 router.delete("/:id", deleteAppointment)
+
+router.get("/slots/:provider_id", getOccupiedSlots)
 
 export default router
