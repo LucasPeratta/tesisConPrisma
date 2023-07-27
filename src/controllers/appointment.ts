@@ -156,7 +156,6 @@ export const getOccupiedSlots = async (req: Request, res: Response) => {
 						date
 					}
 				}
-				// Appointment: true
 			}
 		})
 		if (!provider) {
