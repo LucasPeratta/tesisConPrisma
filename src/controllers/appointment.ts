@@ -7,6 +7,7 @@ import {
 	getByProviderId
 } from "../repos/appointment"
 import { Appointment, Provider } from "@prisma/client"
+import { sendEmail } from "../email"
 
 export const getAll = async (req: Request, res: Response) => {
 	try {
@@ -77,6 +78,9 @@ export const addAppointment = async (req: Request, res: Response) => {
 				}
 			}
 		})
+
+		sendAppointmentCreationEmail(appointment)
+
 		res.json({ msg: "Appointment added SUCCESSFULLY", data })
 	} catch (error) {
 		res.json({ msg: "Error, couldn't add a appointment ", error })
@@ -290,4 +294,35 @@ type Shifts = {
 		available: boolean
 		shifts: Shift[]
 	}
+}
+
+const sendAppointmentCreationEmail = async (appointment: Appointment) => {
+	const patient = await prisma.patient.findUnique({
+		where: {
+			id: appointment.patientId
+		},
+		select: {
+			name: true
+		}
+	})
+
+	const provider = await prisma.provider.findUnique({
+		where: {
+			id: appointment.providerId
+		},
+		select: {
+			name: true
+		}
+	})
+
+	sendEmail(
+		"franco.peratta@hotmail.com",
+		"Appointment created",
+		"appointment_created",
+		{
+			nombre: patient?.name,
+			medico: provider?.name,
+			fecha: appointment.date
+		}
+	)
 }

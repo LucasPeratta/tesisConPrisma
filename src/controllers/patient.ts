@@ -66,6 +66,8 @@ export const updatePatient = async (req: Request, res: Response) => {
 export const updateEmr = async (req: Request, res: Response) => {
 	const patientId = parseInt(req.params.id)
 	const { emr } = req.body
+	console.log(emr);
+
 
 	try {
 		const data = await repo.updateEmr(patientId, emr)

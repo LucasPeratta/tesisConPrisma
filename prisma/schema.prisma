@@ -32,7 +32,7 @@ model Patient {
   dni         String
   dob         String
   phoneNumber String?
-  emr         String
+  emr         String        @db.Text
   user        User          @relation(fields: [id], references: [id]) // field patient id references user id
   Appointment Appointment[]
 }
